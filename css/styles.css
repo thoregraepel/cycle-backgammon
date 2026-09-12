@@ -1,0 +1,172 @@
+/* ------------------------------------------------------------------
+   Cycle Backgammon — a walnut-and-felt board, in the dark.
+   ------------------------------------------------------------------ */
+
+:root {
+  --bg:        #17130f;
+  --panel:     #211a14;
+  --panel-2:   #2b2219;
+  --line:      #3b2f23;
+  --ink:       #efe6d6;
+  --ink-dim:   #a8977d;
+  --gold:      #c9a227;
+  --gold-soft: #e2c869;
+  --white-checker: #efe4cd;
+  --black-checker: #1d1b19;
+  --shadow: 0 10px 30px rgba(0, 0, 0, .55);
+  font-synthesis-weight: none;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(1200px 700px at 50% -10%, #2a2119 0%, var(--bg) 60%);
+  color: var(--ink);
+  font: 15px/1.55 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  min-height: 100vh;
+}
+
+/* ---- top bar -------------------------------------------------------- */
+
+.topbar {
+  display: flex; flex-wrap: wrap; gap: 20px;
+  align-items: flex-end; justify-content: space-between;
+  padding: 22px 30px 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 27px; font-weight: 600; letter-spacing: .045em;
+  color: var(--gold-soft);
+}
+.brand p {
+  margin: 5px 0 0; max-width: 60ch;
+  color: var(--ink-dim); font-size: 14px;
+}
+
+.knobs { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.knobs label {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 12.5px; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+select, button {
+  font: inherit; font-size: 14px;
+  color: var(--ink);
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 7px 12px;
+  cursor: pointer;
+  transition: border-color .15s, background .15s, opacity .15s;
+}
+select:hover, button:hover:not(:disabled) { border-color: var(--gold); }
+button:disabled { opacity: .38; cursor: default; }
+
+button.primary {
+  background: linear-gradient(#3c2f1c, #2a2013);
+  border-color: #6b5324;
+  color: var(--gold-soft);
+}
+button.primary:hover:not(:disabled) { background: linear-gradient(#4a3a22, #332718); }
+button.big { width: 100%; padding: 11px; font-size: 16px; letter-spacing: .04em; }
+
+kbd {
+  font: 11px/1 ui-monospace, monospace;
+  border: 1px solid var(--line); border-radius: 4px;
+  padding: 2px 4px; margin-left: 5px;
+  color: var(--ink-dim);
+}
+
+/* ---- layout --------------------------------------------------------- */
+
+main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 26px;
+  padding: 26px 30px 40px;
+  align-items: start;
+}
+
+.board-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: calc(100vh - 172px);   /* the ring always fits on screen */
+  margin-inline: auto;
+}
+#board { width: 100%; height: 100%; display: block; filter: drop-shadow(var(--shadow)); }
+
+.banner {
+  position: absolute; inset: auto 0 46% 0;
+  text-align: center;
+  pointer-events: none;
+}
+.banner span {
+  display: inline-block;
+  padding: 12px 26px;
+  background: rgba(20, 16, 12, .93);
+  border: 1px solid var(--gold);
+  border-radius: 10px;
+  color: var(--gold-soft);
+  font-size: 21px; letter-spacing: .05em;
+  box-shadow: var(--shadow);
+}
+
+/* ---- panel ---------------------------------------------------------- */
+
+.panel { display: flex; flex-direction: column; gap: 16px; }
+
+.card {
+  background: linear-gradient(var(--panel), #1c1610);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.side { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; }
+.side + .side { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+.side h2 { margin: 0; font-size: 16px; font-weight: 600; letter-spacing: .04em; }
+.side p  { margin: 0; font-size: 12px; color: var(--ink-dim); }
+.side.on { --line: #6b5324; }
+.side.on h2 { color: var(--gold-soft); }
+
+.chip { width: 22px; height: 22px; border-radius: 50%; display: block; }
+.chip-w { background: radial-gradient(circle at 35% 30%, #fff8e8, #cdbd9c); border: 1px solid #8d7d5f; }
+.chip-b { background: radial-gradient(circle at 35% 30%, #4a4643, #100f0e); border: 1px solid #000; }
+
+.nums { display: grid; grid-template-columns: auto auto; gap: 1px 7px; text-align: right; }
+.nums b { font-size: 17px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.nums span { font-size: 11px; color: var(--ink-dim); letter-spacing: .06em; text-transform: uppercase; }
+
+.turn-card { display: flex; flex-direction: column; gap: 11px; }
+#turn-line { font-size: 17px; letter-spacing: .03em; }
+#turn-line b { color: var(--gold-soft); }
+.hint { margin: 0; font-size: 12.5px; color: var(--ink-dim); min-height: 2.6em; }
+
+.rules h3 {
+  margin: 0 0 9px; font-size: 12px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--gold);
+}
+.rules ul { margin: 0; padding-left: 17px; font-size: 13px; color: var(--ink-dim); }
+.rules li + li { margin-top: 6px; }
+.rules b { color: var(--ink); font-weight: 600; }
+.foot { margin: 12px 0 0; font-size: 12px; }
+.foot a { color: var(--ink-dim); }
+
+/* ---- board interaction --------------------------------------------- */
+
+#board .hit { cursor: default; }
+#board .hit.live { cursor: pointer; }
+#board .checker { transition: transform .18s ease; }
+
+@media (max-width: 940px) {
+  main { grid-template-columns: 1fr; }
+  .board-wrap { max-width: min(100%, 78vh); }
+  .topbar { padding: 18px 20px 14px; }
+  main { padding: 18px 20px 30px; }
+}

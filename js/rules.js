@@ -192,8 +192,15 @@
      Backgammon's "play as many dice as you can, and if you can only
      play one, play the larger" rule is enforced the usual way: expand
      the whole tree, then keep the longest lines. A line that wins is
-     terminal however short it is. */
-  function legalPlays(s) {
+     terminal however short it is.
+
+     `dedupe` collapses lines that reach the same position by a
+     different order of the same moves. The AI wants that — it halves
+     the work and changes nothing. The board must NOT have it: the
+     survivor of a collapsed pair fixes one order, and the player who
+     clicks the other order would find the move silently ignored. */
+  function legalPlays(s, dedupe) {
+    if (dedupe === undefined) dedupe = true;
     const seen = new Map();
     const lines = [];
 
@@ -233,7 +240,9 @@
     const out = [];
     for (const l of keep) {
       if (!l.moves.length) continue;          // nothing playable: the turn is lost
-      const k = hash(l.state) + '#' + l.moves.length;
+      const k = dedupe
+        ? hash(l.state) + '#' + l.moves.length
+        : l.moves.map(m => m.from + '>' + m.to + '/' + m.die + (m.crowned ? 'c' : '')).join(',');
       if (seen.has(k)) continue;
       seen.set(k, true);
       out.push(l);

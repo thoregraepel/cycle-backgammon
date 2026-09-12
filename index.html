@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cycle Backgammon</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <h1>Cycle Backgammon</h1>
+    <p>The ends of the board are joined. Nothing bears off — cross the gate, take a crown,
+       and come back round as a supporter.</p>
+  </div>
+  <div class="knobs">
+    <label>Black
+      <select id="black-player">
+        <option value="human">Human</option>
+        <option value="easy">AI · easy</option>
+        <option value="normal" selected>AI · normal</option>
+        <option value="strong">AI · strong</option>
+      </select>
+    </label>
+    <label>White
+      <select id="white-player">
+        <option value="human" selected>Human</option>
+        <option value="easy">AI · easy</option>
+        <option value="normal">AI · normal</option>
+        <option value="strong">AI · strong</option>
+      </select>
+    </label>
+    <button id="undo" title="Take back the moves played so far this turn">Undo</button>
+    <button id="new-game" class="primary">New game <kbd>N</kbd></button>
+  </div>
+</header>
+
+<main>
+  <section class="board-wrap">
+    <svg id="board" viewBox="0 0 760 760" aria-label="Cycle backgammon board"></svg>
+    <div id="banner" class="banner" hidden></div>
+  </section>
+
+  <aside class="panel">
+    <div class="card score">
+      <div class="side side-w">
+        <span class="chip chip-w"></span>
+        <div>
+          <h2>White</h2>
+          <p id="w-role">You</p>
+        </div>
+        <div class="nums">
+          <b id="w-crowns">0</b><span>crowns</span>
+          <b id="w-pips">167</b><span>pips</span>
+        </div>
+      </div>
+      <div class="side side-b">
+        <span class="chip chip-b"></span>
+        <div>
+          <h2>Black</h2>
+          <p id="b-role">AI · normal</p>
+        </div>
+        <div class="nums">
+          <b id="b-crowns">0</b><span>crowns</span>
+          <b id="b-pips">167</b><span>pips</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card turn-card">
+      <div id="turn-line">White to roll</div>
+      <button id="roll" class="primary big">Roll <kbd>R</kbd></button>
+      <p id="hint" class="hint">Click a checker, then click where it should go.</p>
+    </div>
+
+    <div class="card rules">
+      <h3>Rules</h3>
+      <ul>
+        <li>White runs clockwise, Black anticlockwise, round and round.</li>
+        <li>The <b>gate</b> at the top is the seam where the board's two ends were
+            joined — both of you cross it, in opposite directions.</li>
+        <li>Cross it and the checker is <b>crowned</b>: it lands on the far side,
+            can no longer be hit, and holds its point alone.</li>
+        <li>Hit a lone uncrowned checker and it goes to the bar, owing a full
+            lap of 24 pips again.</li>
+        <li>Crown all fifteen to win.</li>
+      </ul>
+      <p class="foot"><a href="https://github.com/thoregraepel/cycle-backgammon">source</a></p>
+    </div>
+  </aside>
+</main>
+
+<script src="js/rules.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/board.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

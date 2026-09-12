@@ -153,6 +153,38 @@ for (let d = 1; d <= 6; d++) {
   }
 }
 
+{
+  /* Every order of playing the roll must be offered, not just one of
+     them. Collapsing orders that reach the same position is fine for
+     the AI and wrong for the board: the player clicks an order, not a
+     position. Checked directly — if a move can be followed by a legal
+     play of the other die, the board has to offer it. */
+  let missing = null;
+  for (const roll of [[2, 4], [6, 1], [5, 3]]) {
+    const s = R.newState();
+    R.startTurn(s, roll);
+    const offered = R.nextSteps(R.legalPlays(s, false), []);
+    for (const src of R.sources(s, 'W')) {
+      for (const die of roll) {
+        const m = R.moveFor(s, 'W', src, die);
+        if (!m) continue;
+        const after = R.applyMove(R.clone(s), m);
+        const otherDie = die === roll[0] ? roll[1] : roll[0];
+        const playable = R.sources(after, 'W').some(s2 => R.moveFor(after, 'W', s2, otherDie));
+        if (!playable) continue;               // stranding a die: rightly hidden
+        if (!offered.some(o => R.sameMove(o, m))) {
+          missing = roll.join('-') + ': ' + m.from + ' to ' + m.to + ' with ' + die;
+        }
+      }
+    }
+  }
+  check('every playable order is offered', !missing, missing);
+  check('the AI still gets the deduped list', (function () {
+    const s = R.newState(); R.startTurn(s, [2, 4]);
+    return R.legalPlays(s, true).length < R.legalPlays(s, false).length;
+  })());
+}
+
 /* ---- 5. conservation ------------------------------------------------ */
 
 {
