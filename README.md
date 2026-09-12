@@ -11,6 +11,13 @@ racing and start **supporting** the ones still running. Crown all fifteen to win
 
 **[▶ Play](https://thoregraepel.github.io/cycle-backgammon/)**
 
+![The board mid-game](docs/board.png)
+
+*Mid-game. The crowned checkers either side of the gate are the point of the
+whole thing: White crosses 23 → 0 and lands on 1 and 2, in Black's final
+approach; Black crosses 0 → 23 and lands on 22 and 23, in White's. Every
+checker you finish becomes an obstacle in the other player's way.*
+
 ## The board
 
 Twenty-four points around a ring, in four quadrants of six. White travels
