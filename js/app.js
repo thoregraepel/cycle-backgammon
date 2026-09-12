@@ -25,6 +25,17 @@
   let busy = false;
   let players = { W: 'human', B: 'normal' };
 
+  /* The game is strictly sequential: at any moment exactly one
+     continuation is pending — the next roll, the next AI move, the end
+     of the turn. Holding that in a single slot means starting a new
+     one cancels any stale one, so changing a player mid-game (or
+     hitting New game) can never leave two chains driving one board. */
+  let timer = null;
+  function later(fn, ms) {
+    clearTimeout(timer);
+    timer = setTimeout(fn, ms);
+  }
+
   const isHuman = c => players[c] === 'human';
   const name = c => (c === 'W' ? 'White' : 'Black');
   const roleText = c => players[c] === 'human' ? 'You' : 'AI · ' + players[c];
@@ -32,6 +43,7 @@
   /* ---- turn machinery ------------------------------------------------ */
 
   function newGame() {
+    clearTimeout(timer);
     state = R.newState();
     plays = []; prefix = []; sel = null; turnStart = null; busy = false;
     $('banner').hidden = true;
@@ -51,10 +63,10 @@
     draw();
     if (!plays.length) {
       setHint(name(state.turn) + ' cannot play that roll.');
-      setTimeout(finishTurn, AI_ROLL_PAUSE + 400);
+      later(finishTurn, AI_ROLL_PAUSE + 400);
       return;
     }
-    if (!isHuman(state.turn)) setTimeout(aiPlay, AI_ROLL_PAUSE);
+    if (!isHuman(state.turn)) later(aiPlay, AI_ROLL_PAUSE);
   }
 
   function aiPlay() {
@@ -62,10 +74,10 @@
     if (!play) { finishTurn(); return; }
     let k = 0;
     (function step() {
-      if (k >= play.moves.length) { draw(); setTimeout(finishTurn, AI_MOVE_PAUSE); return; }
+      if (k >= play.moves.length) { draw(); later(finishTurn, AI_MOVE_PAUSE); return; }
       applyStep(play.moves[k++]);
       draw();
-      setTimeout(step, AI_MOVE_PAUSE);
+      later(step, AI_MOVE_PAUSE);
     })();
   }
 
@@ -87,7 +99,7 @@
 
   function maybeAutoRoll() {
     if (state.winner) return;
-    if (!isHuman(state.turn)) { busy = true; setTimeout(beginTurn, 340); }
+    if (!isHuman(state.turn)) { busy = true; later(beginTurn, 340); }
     else busy = false;
     draw();
   }
@@ -135,10 +147,10 @@
       if (t) {
         applyStep(t);
         variants = [];
-        if (state.winner) { draw(); setTimeout(declare, 260); return; }
+        if (state.winner) { draw(); later(declare, 260); return; }
         if (R.turnComplete(plays, prefix)) {
           draw();
-          setTimeout(finishTurn, 260);
+          later(finishTurn, 260);
         } else {
           autoSelect();
           draw();
